@@ -72,8 +72,34 @@ input[type=checkbox]{width:22px;height:22px;margin:1px 0 0;accent-color:var(--do
 .save{font-size:13px;color:var(--muted);min-height:1.2em}
 .hidden-done li.done{display:none}
 @media (prefers-reduced-motion: reduce){.bar>i{transition:none}}
+
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;justify-content:center;gap:6px;padding:8px 16px}
+.tabs button{flex:1;max-width:220px;font-weight:700}
+.bar.small{height:6px;margin-top:6px}
+.subjects li.subj{grid-template-columns:1fr;gap:8px}
+.qhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.timer{font-family:var(--mono);font-weight:700;color:var(--flag);font-variant-numeric:tabular-nums}
+.passage{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.passage summary{cursor:pointer;font-weight:700}
+.ptext{max-height:55vh;overflow:auto;font-size:15px;line-height:1.55}
+.qtext{font-size:17px;line-height:1.5}
+.qtext p,.ptext p{margin:.4em 0}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:grid;grid-template-columns:26px 1fr;gap:8px;text-align:left;padding:11px 12px;border-radius:10px;align-items:start;min-height:48px}
+.opt b{font-family:var(--mono);color:var(--muted)}
+.opt.picked{border-color:var(--accent);background:var(--accent-soft)}
+.opt.good{border-color:var(--done);box-shadow:0 0 0 1px var(--done)}
+.opt.good b{color:var(--done)}
+.opt.bad{border-color:var(--flag);background:var(--flag-soft)}
+.opt:disabled{cursor:default;color:var(--ink);opacity:1}
+.expl{border-radius:10px;padding:10px 12px;background:var(--card);border-left:4px solid var(--done)}
+.expl.ko{border-left-color:var(--flag)}
+li.review{grid-template-columns:1fr}
+button:disabled{opacity:.5}
 </style>
+<nav class="tabs" aria-label="Sections"><button id="tabCheck" aria-pressed="true">Checklist</button><button id="tabQuiz" aria-pressed="false">Réviser</button></nav>
 <div class="wrap" id="app"></div>
+<div class="wrap" id="quiz" hidden></div>
 <script id="state" type="application/json">{"done":{},"custom":[]}</script>
 <script id="main">
 (function(){
@@ -302,4 +328,13 @@ if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catc
 })();
 </script>
 
+<script src="quiz.js"></script>
+<script>
+(function(){
+  const a=document.getElementById('app'), q=document.getElementById('quiz'), t1=document.getElementById('tabCheck'), t2=document.getElementById('tabQuiz');
+  function show(which){ const quiz=which==='quiz'; a.hidden=quiz; q.hidden=!quiz; t1.setAttribute('aria-pressed',!quiz); t2.setAttribute('aria-pressed',quiz); try{localStorage.setItem('s5-tab',which);}catch(e){} if(quiz&&window.S5Quiz) window.S5Quiz.render(); window.scrollTo(0,0); }
+  t1.onclick=()=>show('check'); t2.onclick=()=>show('quiz');
+  let w='check'; try{ w=localStorage.getItem('s5-tab')||'check'; }catch(e){} show(w);
+})();
+</script>
 </body></html>
