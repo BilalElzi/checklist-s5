@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2f4fd8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Checklist S5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Checklist L3 S5</title>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
+</head><body>
+<style id="st">
+/* Layout : une colonne unique, la tâche suivante en haut, puis la liste linéaire par étapes. */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap');
+:root{
+  --bg:#f3f4f8; --card:#ffffff; --ink:#18203a; --muted:#5d6580; --line:#dde0ea;
+  --accent:#2f4fd8; --accent-soft:#e6ebfd; --done:#2f8a57; --flag:#b4521c; --flag-soft:#fbeee4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11141f; --card:#1a1f2e; --ink:#e8eaf3; --muted:#9aa1ba; --line:#2c3247;
+  --accent:#8ea4ff; --accent-soft:#232c4f; --done:#5fc58c; --flag:#f0a06e; --flag-soft:#3a2a20; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11141f; --card:#1a1f2e; --ink:#e8eaf3; --muted:#9aa1ba; --line:#2c3247;
+  --accent:#8ea4ff; --accent-soft:#232c4f; --done:#5fc58c; --flag:#f0a06e; --flag-soft:#3a2a20; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;margin:0}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:20px 60px;display:flex;flex-direction:column;gap:18px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,6vw,36px);margin:0;letter-spacing:-.5px;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--done);width:0;transition:width .3s}
+.stats{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.next{background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.next .t{font-family:var(--display);font-weight:600;font-size:20px;line-height:1.25}
+.next .d{color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 12px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--card);font-weight:700}
+button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.time{display:flex;flex-direction:column;gap:6px}
+.time .lbl{font-size:13px;color:var(--muted)}
+.fit{font-size:14px;color:var(--ink);background:var(--accent-soft);border-radius:8px;padding:8px 10px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.phase{display:flex;flex-direction:column;gap:6px}
+.phase h2{font-family:var(--display);font-weight:600;font-size:19px;margin:10px 0 0;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.phase h2 small{font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:500}
+.phase .pd{color:var(--muted);font-size:14px;margin:0 0 4px}
+ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:start}
+li.is-next{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+li.done{opacity:.55}
+li.done .tt{text-decoration:line-through}
+input[type=checkbox]{width:22px;height:22px;margin:1px 0 0;accent-color:var(--done);cursor:pointer}
+.body{min-width:0}
+.tt{font-weight:700;display:block}
+.dd{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.min{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.tag{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 5px;white-space:nowrap}
+.flag{display:inline-block;margin-top:4px;font-size:12px;font-weight:700;color:var(--flag);background:var(--flag-soft);border-radius:5px;padding:1px 6px}
+.del{border:none;background:none;color:var(--muted);padding:0 2px;font-size:12px;text-decoration:underline}
+.add{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.add .fields{display:flex;gap:8px;flex-wrap:wrap}
+.add input[type=text]{flex:1 1 240px;min-width:0;font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.add input[type=number]{width:90px;font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.save{font-size:13px;color:var(--muted);min-height:1.2em}
+.hidden-done li.done{display:none}
+@media (prefers-reduced-motion: reduce){.bar>i{transition:none}}
+</style>
+<div class="wrap" id="app"></div>
+<script id="state" type="application/json">{"done":{},"custom":[]}</script>
+<script id="main">
+(function(){
+const SRC = document.getElementById('main').textContent;
+const CSS = document.getElementById('st').textContent;
+const RESET = (document.head.querySelector('style')||{textContent:''}).textContent;
+let S; try{ S = JSON.parse(document.getElementById('state').textContent); }catch(e){ S={done:{},custom:[]}; }
+S.done=S.done||{}; S.custom=S.custom||[];
+
+const PHASES = [
+ {id:"p1", t:"1. Démarrage", d:"À faire maintenant, depuis le Japon. Débloque tout le reste.", tasks:[
+  ["m1","Moodle + ENT : relever toutes les évaluations de CC du S5 avec leurs dates","QCM prospection, QCM compta, CC stats, exposés théorie de la firme et communication, oral anglais. Ajoute ensuite chaque CC comme tâche (en bas de page).",30,"Admin"],
+  ["m2","Mail à un camarade de L3 : consignes ANLA501T 2026-27 et support de communication","Pour récupérer ce qui manque encore dans tes dossiers.",10,"Admin"],
+  ["m3","Mail à la scolarité de japonais : intitulés et modalités des UE de japonais S5","",10,"Japonais"],
+  ["m4","Mail à TSM : césure possible après admission ? Score TAGE MAGE ajoutable après dépôt ?","Garde la réponse écrite.",15,"Master"],
+  ["m5","Réserver une session TOEIC (fin novembre ou décembre, centre agréé à Toulouse)","Site ETS Global. Tâche finie = convocation reçue.",20,"TOEIC","Avant fin octobre"],
+  ["m6","TAGE MAGE blanc complet, chronométré (Grand Manuel)","Note le score sur 600 et tes 2 sous-tests les plus faibles.",120,"TAGE MAGE"],
+  ["m7","Communication : lire le TD 1 et noter les notions vues","Chaque nouveau TD posté = une tâche à ajouter en bas de page.",30,"Communication"]
+ ]},
+ {id:"p2", t:"2. Japon, le soir (jusqu'au 5 novembre)", d:"Des blocs de 15 à 45 min, à caser selon tes horaires de stage.", tasks:[
+  ["j1","Théorie de la firme : fiche 05a, sections 1 à 3 (néo-classiques, limites, Coase)","",45,"Th. firme"],
+  ["j2","Théorie de la firme : fiche 05a, sections 4 et 5 (Williamson, nœud de contrats)","",40,"Th. firme"],
+  ["j3","Théorie de la firme : fiche 05a, sections 6 et 7 + tableau de synthèse","",40,"Th. firme"],
+  ["j4","Théorie de la firme : auto-test de la fiche, noter le score","Refais les questions ratées 3 jours plus tard.",15,"Th. firme"],
+  ["j5","TAGE MAGE : sous-test faible n° 1 (chapitre du Grand Manuel + exercices)","",45,"TAGE MAGE"],
+  ["j6","Compta : fiche 03b, sections 1 à 4 (chaîne comptable, bilan, plan comptable, débit/crédit)","",40,"Compta"],
+  ["j7","Compta : fiche 03b, sections 5 à 7 (TVA, réductions, écritures) + pièges","",40,"Compta"],
+  ["j8","Compta : auto-test de la fiche","",15,"Compta"],
+  ["j9","Japonais : kanji rangs 1 à 4","",30,"Japonais"],
+  ["j10","TAGE MAGE : sous-test faible n° 2","",45,"TAGE MAGE"],
+  ["j11","Prospection : fiche 03d complète","",45,"Prospection"],
+  ["j12","Prospection : QCM de la fiche (15 questions)","",15,"Prospection"],
+  ["j13","Japonais : thème, chapitre 1 (modalités) + exercices corrigés","",45,"Japonais"],
+  ["j14","Communication : TD 2 (dès qu'il est posté)","",30,"Communication"],
+  ["j15","TAGE MAGE : calcul mental et conditions minimales, 1 série","",30,"TAGE MAGE"],
+  ["j16","Japonais : kanji rangs 5 à 8","",30,"Japonais"],
+  ["j17","Théorie de la firme : refaire l'auto-test (questions ratées)","",15,"Th. firme"],
+  ["j18","Communication : TD 3","",30,"Communication"],
+  ["j19","Préparer le retour : vérifier les dates de CC de novembre","",10,"Admin","Avant le 5 novembre"]
+ ]},
+ {id:"p3", t:"3. Retour en France (novembre → mi-décembre)", d:"Tu reprends les cours : on attaque ce qui demande un ordinateur et de l'entraînement.", tasks:[
+  ["f1","Stats : fiche 03a + TD Excel 1 et 2 du cours (Moodle / quadribox)","Sur ordinateur, pas en lisant.",90,"Stats"],
+  ["f2","Stats : TD Excel 3 à 5 (valeurs centrales, dispersion, indices)","",90,"Stats"],
+  ["f3","Stats : TCD (cours 2/6 et 5bis) sur un fichier d'exercice","",60,"Stats"],
+  ["f4","Gestion de projet : fiche 03c + exemple PERT refait sans regarder","",45,"Gestion projet"],
+  ["f5","Gestion de projet : 2 exercices PERT du cours (planification avancée)","",45,"Gestion projet"],
+  ["f6","Civi : préparer seul le plan détaillé d'un discours de la partie 1 (méthode de la fiche 01a)","Rédigé par toi : l'IA est interdite pour les devoirs de ce cours.",60,"Anglais"],
+  ["f7","TOEIC : 1 test complet chronométré + correction","",150,"TOEIC"],
+  ["f8","Communication : TD 4","",30,"Communication"],
+  ["f9","EPE : relire les supports reçus du prof et me les envoyer pour refaire la fiche","",30,"EPE"],
+  ["f10","Projet pro DEI : rédiger la démarche de recherche (pages 3-6)","Ton stage Orion est le cœur du dossier.",120,"Projet pro"],
+  ["f11","Projet pro DEI : CV à jour + capture LinkedIn + tableau des stages","",60,"Projet pro"],
+  ["f12","Projet pro DEI : lettre de motivation","",60,"Projet pro"],
+  ["f13","Civi : plan détaillé d'un discours de la partie 2 (Thatcher Bruges ou Blair)","",60,"Anglais"],
+  ["f14","Passer le TOEIC","",180,"TOEIC","Date de ta convocation"],
+  ["f15","EPE : nouvelle fiche (sur le vrai cours) + auto-test","",60,"EPE"],
+  ["f16","Japonais : thème chapitres 2 à 4 + kanji rangs 9 à 12","",60,"Japonais"],
+  ["f17","Communication : TD 5 + préparer l'exposé collectif","",60,"Communication"],
+  ["f18","Projet pro DEI : faire relire par quelqu'un, puis déposer sur IRIS-exam","Dossier non déposé à temps = échec au module.",30,"Projet pro","Date limite IRIS-exam"],
+  ["f19","Civi : plan détaillé d'un discours de la partie 3 (Cameron, May ou Johnson)","",60,"Anglais"]
+ ]},
+ {id:"p4", t:"4. Examens blancs (mi-décembre → partiels)", d:"Chaque examen blanc se passe chronométré, sans fiche. Corrige-toi avec le corrigé à part.", tasks:[
+  ["e1","Examen blanc Théorie de la firme (90 min)","Dossier 00 EXAMENS BLANCS.",90,"Th. firme"],
+  ["e2","Corriger Théorie de la firme + relire les parties ratées de la fiche","",45,"Th. firme"],
+  ["e3","Examen blanc Gestion de projet (90 min) + correction","",120,"Gestion projet"],
+  ["e4","Examen blanc Stats sur Excel (60 min) + correction","",90,"Stats"],
+  ["e5","Examen blanc EPE (90 min) + correction","",120,"EPE"],
+  ["e6","Examen blanc Compta (QCM 60 min) + correction","",80,"Compta"],
+  ["e7","Examen blanc Prospection (QCM 30 min) + correction","",45,"Prospection"],
+  ["e8","QCM Communication (15 min)","",20,"Communication"],
+  ["e9","Refaire tous les auto-tests où tu étais sous 80 %","",90,"Toutes"],
+  ["e10","Veille de chaque partiel : relire seulement les encadrés « Pièges » et les tableaux de synthèse","",30,"Toutes","Veille de chaque partiel"]
+ ]},
+ {id:"p5", t:"5. TAGE MAGE intensif (après les partiels)", d:"Ton créneau plein temps. Objectif : passer le test vers la mi-février.", tasks:[
+  ["t1","S'inscrire à une session TAGE MAGE de mi-février","",20,"TAGE MAGE","Dès la fin des partiels"],
+  ["t2","Sous-test Compréhension de texte : chapitre + 2 séries","",90,"TAGE MAGE"],
+  ["t3","Sous-test Calcul : chapitre + 2 séries","",90,"TAGE MAGE"],
+  ["t4","Sous-test Raisonnement et argumentation : chapitre + 2 séries","",90,"TAGE MAGE"],
+  ["t5","Sous-test Conditions minimales : chapitre + 2 séries","",90,"TAGE MAGE"],
+  ["t6","Sous-test Expression : chapitre + 2 séries","",90,"TAGE MAGE"],
+  ["t7","Sous-test Logique : chapitre + 2 séries","",90,"TAGE MAGE"],
+  ["t8","Test blanc complet n° 2 + analyse des erreurs","",150,"TAGE MAGE"],
+  ["t9","Retravailler les 2 sous-tests les plus faibles","",120,"TAGE MAGE"],
+  ["t10","Test blanc complet n° 3","",120,"TAGE MAGE"],
+  ["t11","Passer le TAGE MAGE","",180,"TAGE MAGE","Mi-février"]
+ ]},
+ {id:"p6", t:"6. Candidatures Mon Master", d:"Phase de candidature probablement de mi-février à mi-mars 2027 (en 2026 : 17 février → 16 mars).", tasks:[
+  ["c1","Créer le compte Mon Master et repérer les fiches des masters TSM visés","",30,"Master","Dès l'ouverture de la plateforme"],
+  ["c2","Lettre de motivation Master International Management","",90,"Master"],
+  ["c3","Lettre de motivation Master International Marketing of Innovation (si tu candidates)","",90,"Master"],
+  ["c4","Rassembler relevés de notes, CV, scores TOEIC et TAGE MAGE","",30,"Master"],
+  ["c5","Déposer les candidatures et vérifier que tout est complet","",30,"Master","Avant la clôture de la phase"]
+ ]}
+];
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtMin = m => m>=60 ? (Math.floor(m/60)+" h"+(m%60? " "+String(m%60).padStart(2,"0"):"")) : m+" min";
+
+function ordered(){
+  // base tasks in order, custom tasks inserted after their anchor (or at the end of their phase)
+  const out=[];
+  PHASES.forEach(ph=>{
+    const list=[];
+    ph.tasks.forEach(t=>{
+      list.push({id:t[0],t:t[1],d:t[2],m:t[3],tag:t[4],flag:t[5]||"",ph:ph.id});
+      S.custom.filter(c=>c.after===t[0]).forEach(c=>list.push({id:c.id,t:c.t,d:"",m:c.m,tag:"Ajout",flag:"",ph:ph.id,custom:true}));
+    });
+    S.custom.filter(c=>c.after==="end:"+ph.id).forEach(c=>list.push({id:c.id,t:c.t,d:"",m:c.m,tag:"Ajout",flag:"",ph:ph.id,custom:true}));
+    out.push({ph,list});
+  });
+  return out;
+}
+function allTasks(){ return ordered().flatMap(g=>g.list); }
+
+let fitMin=null, hideDone=false;
+try{ hideDone = localStorage.getItem('s5-hide')==='1'; }catch(e){}
+
+function render(){
+  const groups=ordered(), all=groups.flatMap(g=>g.list);
+  const todo=all.filter(t=>!S.done[t.id]);
+  const next=todo[0];
+  const doneN=all.length-todo.length;
+  const leftMin=todo.reduce((a,t)=>a+t.m,0);
+  let fitHtml="";
+  if(fitMin){
+    const f=todo.find(t=>t.m<=fitMin);
+    fitHtml = f ? `<div class="fit">Avec ${fmtMin(fitMin)} : <b>${esc(f.t)}</b> (${fmtMin(f.m)}). C'est la première tâche de la liste qui tient dans ce temps.</div>`
+                : `<div class="fit">Aucune tâche restante ne tient en ${fmtMin(fitMin)}.</div>`;
+  }
+  const app=document.getElementById('app');
+  app.innerHTML = `
+  <header>
+    <h1>Checklist L3 S5</h1>
+    <p class="sub">Une seule liste, dans l'ordre. Tu fais la tâche suivante, tu coches, tu passes à la suite. Pas de dates à tenir, sauf les échéances signalées en orange.</p>
+  </header>
+  <div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${all.length}" aria-valuenow="${doneN}"><i style="width:${all.length?Math.round(doneN/all.length*100):0}%"></i></div>
+    <div class="stats"><span>${doneN} / ${all.length} tâches faites</span><span>reste ≈ ${fmtMin(leftMin)} de travail</span></div>
+  </div>
+  ${next?`<section class="next" aria-label="Tâche suivante">
+    <span class="eyebrow">Tâche suivante</span>
+    <div class="t">${esc(next.t)}</div>
+    ${next.d?`<div class="d">${esc(next.d)}</div>`:""}
+    <div class="row"><span class="min">${fmtMin(next.m)}</span><span class="tag">${esc(next.tag)}</span>${next.flag?`<span class="flag">${esc(next.flag)}</span>`:""}</div>
+    <div class="row"><button class="primary" data-check="${next.id}">C'est fait</button></div>
+    <div class="time"><span class="lbl">Tes horaires ont bougé ? Combien de temps as-tu là, tout de suite ?</span>
+      <div class="row">${[15,30,60,120].map(m=>`<button data-fit="${m}" aria-pressed="${fitMin===m}">${fmtMin(m)}</button>`).join("")}</div>
+      ${fitHtml}
+    </div>
+  </section>`:`<section class="next"><span class="eyebrow">Terminé</span><div class="t">Tout est coché.</div></section>`}
+  <div class="tools">
+    <button id="toggleDone" aria-pressed="${hideDone}">${hideDone?"Afficher les tâches faites":"Masquer les tâches faites"}</button>
+    <span class="save" id="save" aria-live="polite"></span>
+  </div>
+  <div class="${hideDone?'hidden-done':''}">
+  ${groups.map(g=>{
+    const d=g.list.filter(t=>S.done[t.id]).length;
+    return `<section class="phase"><h2>${esc(g.ph.t)}<small>${d}/${g.list.length}</small></h2><p class="pd">${esc(g.ph.d)}</p><ul>
+    ${g.list.map(t=>`<li class="${S.done[t.id]?'done':''} ${next&&t.id===next.id?'is-next':''}">
+      <input type="checkbox" id="cb-${t.id}" data-check="${t.id}" ${S.done[t.id]?'checked':''} aria-label="${esc(t.t)}">
+      <label class="body" for="cb-${t.id}"><span class="tt">${esc(t.t)}</span>${t.d?`<span class="dd">${esc(t.d)}</span>`:""}${t.flag?`<span class="flag">${esc(t.flag)}</span>`:""}</label>
+      <div class="meta"><span class="min">${fmtMin(t.m)}</span><span class="tag">${esc(t.tag)}</span>${t.custom?`<button class="del" data-del="${t.id}">retirer</button>`:""}</div>
+    </li>`).join("")}</ul></section>`;}).join("")}
+  </div>
+  <section class="add" aria-label="Ajouter une tâche">
+    <span class="eyebrow">Ajouter une tâche</span>
+    <span class="sub">Un nouveau TD de communication, un CC dont tu viens d'apprendre la date… Elle se place juste après la tâche suivante, ou à la fin de l'étape choisie.</span>
+    <div class="fields">
+      <input type="text" id="addText" placeholder="Ex. Communication : TD 6" maxlength="160">
+      <input type="number" id="addMin" min="5" step="5" value="30" aria-label="Durée en minutes">
+    </div>
+    <div class="row">
+      <button class="primary" id="addNext">Ajouter après la tâche suivante</button>
+      ${PHASES.map(p=>`<button data-addend="${p.id}">Fin de l'étape ${p.t.split(".")[0]}</button>`).join("")}
+    </div>
+  </section>
+  <section class="add" aria-label="Transférer">
+    <span class="eyebrow">Transférer tes coches</span>
+    <span class="sub">Les coches restent sur cet appareil. Pour les passer sur un autre (ou depuis la version Claude), copie le code ici et colle-le de l'autre côté.</span>
+    <div class="fields"><input type="text" id="code" placeholder="Colle un code ici"></div>
+    <div class="row"><button id="copyCode">Copier mon code</button><button id="loadCode">Charger ce code</button></div>
+  </section>`;
+  setSave();
+}
+
+// ---------- saving (local, hors ligne) ----------
+let saveMsg="";
+function setSave(){ const el=document.getElementById('save'); if(el) el.textContent=saveMsg; }
+function schedule(){ try{ localStorage.setItem('s5-state', JSON.stringify(S)); saveMsg="Enregistré sur ce téléphone."; }catch(e){ saveMsg="Impossible d'enregistrer (navigation privée ?)."; } setSave(); }
+function exportCode(){ return btoa(unescape(encodeURIComponent(JSON.stringify(S)))); }
+function importCode(code){ const o=JSON.parse(decodeURIComponent(escape(atob(code.trim())))); if(!o||typeof o.done!=="object") throw new Error("bad"); S={done:o.done||{},custom:o.custom||[]}; }
+// restore unsaved local ticks if the published version is older than this device
+try{
+  const loc=JSON.parse(localStorage.getItem('s5-state')||'null');
+  if(loc&&loc.done){ S={done:loc.done,custom:loc.custom||[]}; }
+}catch(e){}
+
+document.addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.check){ toggle(b.dataset.check, true); }
+  else if(b.dataset.fit){ const m=+b.dataset.fit; fitMin = fitMin===m?null:m; render(); }
+  else if(b.id==='toggleDone'){ hideDone=!hideDone; try{localStorage.setItem('s5-hide',hideDone?'1':'0');}catch(_){} render(); }
+  else if(b.dataset.del){ S.custom=S.custom.filter(c=>c.id!==b.dataset.del); delete S.done[b.dataset.del]; render(); schedule(); }
+  else if(b.id==='copyCode'){ const c=exportCode(); const inp=document.getElementById('code'); inp.value=c; (navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>{saveMsg="Code copié.";setSave();}).catch(()=>{inp.select();saveMsg="Code affiché : sélectionne-le et copie-le.";setSave();}); }
+  else if(b.id==='loadCode'){ try{ importCode(document.getElementById('code').value); render(); schedule(); saveMsg="Coches chargées."; setSave(); }catch(err){ saveMsg="Code invalide : recopie-le en entier."; setSave(); } }
+  else if(b.id==='addNext' || b.dataset.addend){ addTask(b.dataset.addend?("end:"+b.dataset.addend):null); }
+});
+document.addEventListener('change', e=>{
+  const c=e.target; if(c.matches('input[type=checkbox][data-check]')) toggle(c.dataset.check, c.checked);
+});
+function toggle(id, val){
+  if(val) S.done[id]=new Date().toISOString().slice(0,10); else delete S.done[id];
+  render(); schedule();
+}
+function addTask(after){
+  const t=document.getElementById('addText').value.trim(); if(!t){ document.getElementById('addText').focus(); return; }
+  const m=Math.max(5, parseInt(document.getElementById('addMin').value,10)||30);
+  if(!after){ const all=allTasks(); const idx=all.findIndex(x=>!S.done[x.id]); const anchor=all[idx];
+    after = anchor ? (anchor.custom ? (S.custom.find(c=>c.id===anchor.id)||{}).after : anchor.id) : "end:p6"; }
+  S.custom.push({id:"u"+Date.now().toString(36), t, m, after});
+  render(); schedule();
+}
+
+render();
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+})();
+</script>
+
+</body></html>
